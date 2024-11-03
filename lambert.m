@@ -22,11 +22,24 @@ function [V1,V2] = lambert(mu,R0,R1,dt,z0,dir)
         else
             C=(1-cos(sqrt(z)))/z;
             S=(sqrt(z)-sin(sqrt(z)))/z^(3/2);
-            Cprime = (1/2*z)*(1-z*S-2*C); 
-            Sprime = (1/2*z)*(C-3*S);
+            Cprime = (1/(2*z))*(1-z*S-2*C); 
+            Sprime = (1/(2*z))*(C-3*S);
         end
         y = r0 + r1 - A*(1-z*C)/sqrt(C);
         X = sqrt(y/C);
-        u = (1/sqrt(mu))*((X^3)*S+A*sqrt(y));
+        u = 1/sqrt(mu)*(X^3*S+A*sqrt(y)) - dt;
+        v = (1/sqrt(mu))*((X^3)*(Sprime-((3*S*Cprime)/2*C))+(A/8*(((3*S*sqrt(y))/C)+A/X)));
+      
+        z1 = z - (u/v);
+        relerr = abs((z1-z)/z);
+        z = z1;
+
     end
- 
+
+    f = 1 - ((X^2/r0)*C);
+    g = dt - (((X^3)/sqrt(mu))*S);
+    fdot = (sqrt(mu)/(r0*r1))*X*(z*S-1);
+    gdot = (1+g*fdot)/f;
+
+    V1 = (R1 - f*R0)/g;
+    V2 = fdot*R0 + gdot*V1;
