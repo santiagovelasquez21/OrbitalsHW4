@@ -1,3 +1,4 @@
+% Benjamin Stiyer, Lainey Oliphant, Santiago Velasquez
 %% Obtaining initial variables
 %% Example Problem 1
 R0 = [0.5 0.6 0.7];
